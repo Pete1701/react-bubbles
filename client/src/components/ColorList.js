@@ -27,7 +27,10 @@ const ColorList = ({ colors, updateColors }) => {
       .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
         console.log('PUT', res);
-        updateColors(colors);
+        setEditing(false);
+        updateColors(colors.map(color => {
+          return color.id === colorToEdit.id ? colorToEdit : color  
+        }));
       })
       .catch(err => console.log(err));
   };
@@ -38,6 +41,9 @@ const ColorList = ({ colors, updateColors }) => {
     .delete(`/api/colors/${color.id}`)
       .then(res => {
         console.log('DELETE', res);
+        updateColors(colors.filter(colour => {
+          return colour.id !== color.id
+        }))
         history.push("/bubblepage");
       })
       .catch(err => console.log(err));
